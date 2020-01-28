@@ -1,6 +1,9 @@
 
 #include <stdlib.h> //malloc
+#include <fcntl.h> //open
 #include <stdio.h>
+#include <unistd.h> //read
+
 
 //Len
 int ft_strlen(const char *str)
@@ -8,7 +11,7 @@ int ft_strlen(const char *str)
 	int len;
 
 	len = 0;
-	while(str[len] != '\0')
+	while(str[len])
 		len++;
 	return (len);
 }
@@ -17,13 +20,9 @@ char *ft_strdup(const char *s)
 {
 	char *copy;
 	int i;
-	int len;
 
 	i = 0;
-	len = 0;
-	while(s[len])
-		len++;
-	if(!(copy = (char *)malloc(len + 1)))
+	if(!(copy = (char *)malloc(ft_strlen(s) + 1)))
 		return (NULL);
 	while(s[i])
 	{
@@ -74,8 +73,6 @@ char *ft_strchr(const char *s, int c)
 			return(str);
 		str++;
 	}
-	if(*str == c)
-		return(str);
 	if(c == 0)
 		return ("\0");
 	return (NULL);
@@ -104,20 +101,72 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		str[i] = s[i + start];
 		i++;
 	}
-	str[i]== '\0';
+	str[i] = '\0';
 	return (str);
 }
 
-int get_next_line(int fd, char **line)
+int ft_next_line(char **line, char *aux)
+{
+    int len;
+    char *temp;
+    
+    len = 0;
+    while(aux[len] != '\0' && aux[len] != '\n')
+        len++;
+    if (aux[len] == '\n')
+    {
+        *line = ft_substr(aux, 0, len);
+        temp = ft_strdup(&(aux[len + 1]));
+        free(aux);
+        aux = temp;
+    }
+    else
+    {
+        *line = ft_strdup(aux);
+        free(aux);
+        aux = NULL;
+        return(0);
+    }
+    return (1);
+}
+
+int ft_return_value(int len, char **line, char *aux)
+{
+    if (len < 0)
+        return(-1);
+    else if(len == 0 && aux == NULL)
+    {
+        *line = ft_strdup("");
+        return(0);
+        
+    }
+    else
+        return(ft_next_line(line, aux));
+}
+
+int get_next_line(char **line)
 {
 	static char *aux;
 	char buff[42];
 	char *temp;
 	int len;
 
-	if(fd < 0 || line == NULL)
+	if(line == NULL)
 		return(-1);
-	while((len = read(fd, buff, )))
+	while((len = read(0, buff, 42)) > 0)
+    {
+        buff[len] = 0;
+        if (!aux)
+            aux = ft_strdup(buff);
+        else{
+            temp = ft_strjoin(aux, buff);
+            free(aux);
+            aux = temp;
+        }
+        if(ft_strchr(aux, '\n'))
+            break ;
+    }
+    return(ft_return_value(len, line, aux));
 }
 
 int main()
