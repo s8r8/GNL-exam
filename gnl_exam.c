@@ -153,7 +153,7 @@ int get_next_line(char **line)
 
 	if(line == NULL)
 		return(-1);
-	while((len = read(0, buff, 42)) > 0)
+	while((len = read(0, buff, 41)) > 0)
     {
         buff[len] = 0;
         if (!aux)
