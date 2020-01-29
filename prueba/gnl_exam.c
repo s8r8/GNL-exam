@@ -7,7 +7,7 @@ int ft_strlen(const char *str)
 	int len;
 
 	len = 0;
-	while(str[len])
+	while(str[len] != '\0')
 		len++;
 	return (len);
 }
@@ -18,7 +18,7 @@ char *ft_strdup(const char *s)
 	int i;
 
 	i = 0;
-	if(!(copy = (char *)malloc(ft_strlen(s) + 1)))
+	if(!(copy = (char*)malloc(ft_strlen(s) + 1)))
 		return (NULL);
 	while(s[i])
 	{
@@ -69,7 +69,9 @@ char *ft_strchr(const char *s, int c)
 			return(str);
 		str++;
 	}
-	if(c == 0)
+    if (*str == c)
+        return (str);
+    if(c == 0)
 		return ("\0");
 	return (NULL);
 }
@@ -84,7 +86,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	i = 0;
 	if(s == NULL)
 		return(NULL);
-	if(!(str = malloc(len + 1)))
+	if(!(str = (char*)malloc(len + 1)))
 		return(NULL);
 	str_len = ft_strlen(s);
 	if (start > str_len)
@@ -112,7 +114,7 @@ int ft_next_line(char **line, char *aux)
     if (aux[len] == '\n')
     {
         *line = ft_substr(aux, 0, len);
-        temp = ft_strdup(&(aux[len + 1]));
+        temp = ft_strdup(&aux[len + 1]);
         free(aux);
         aux = temp;
     }
@@ -147,16 +149,16 @@ int ft_get_next_line(char **line)
 	char *temp;
 	int len;
 
-	if(line == NULL)
+	if(!line)
 		return(-1);
-	while((len = read(0, buff, 42)) > 0)
+	while((len = read(0, buff, 41)) > 0)
     {
-        buff[len] = 0;
+        buff[len] = '\0';
         if (!aux)
             aux = ft_strdup(buff);
         else{
             temp = ft_strjoin(aux, buff);
-            free(aux);
+            //free(aux);
             aux = temp;
         }
         if(ft_strchr(aux, '\n'))
@@ -164,18 +166,4 @@ int ft_get_next_line(char **line)
     }
     return(ft_return_value(len, line, aux));
 }
-/*
-int main()
-{
-	char *s1 = "Hello ";
-	char *s2 = "everyone";
-	char *str;
-	char *str2;
 
-	printf("%s", ft_strjoin(s1, s2));
-	str = ft_strdup(s2);
-	printf("\n%s\n", str);
-	str2 = ft_strchr(s1, ' ');
-	printf("%s", str2);
-}
-*/
