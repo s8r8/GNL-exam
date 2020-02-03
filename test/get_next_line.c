@@ -58,16 +58,16 @@ char *ft_strjoin(char const *s1, char const *s2)
 }
 
 //Devuelve un puntero a la última aparición del caracter c en la cadena s
-char *ft_strchr(char *s)
+int ft_strchr(char *s)
 {
-	
+
 	while(*s != '\0')
 	{
 		if(*s == '\n')
 			return(1);
 		s++;
 	}
-    if (*str == '\n')
+    if (*s == '\n')
         return (1);
 	return (0);
 }
@@ -95,48 +95,50 @@ char	*ft_substr(char const *s, int len)
 int    get_next_line(char **line)
 {
     int            len = 0;
-    int         pos = 0;
+    int             len_aux = 0;
     static char    *aux = NULL;
-    char        *aux2 = NULL;
-    char        buff[BUFFER_SIZE + 1];
-    char        *change = NULL;
+    char        *temp = NULL;
+    char        buff[4000 + 1];
+    //char        *change = NULL;
+
+
     if (!line)
         return (-1);
     if (!aux)
         aux = ft_strdup("");
     if (ft_strchr(aux)!= 1)
     {
-        while ((len = read(0,buff,BUFFER_SIZE)) > 0)
+        while ((len = read(0,buff,4000)) > 0)
         {
             buff[len] = '\0';
-            change = ft_strjoin(aux, buff);
+            temp = ft_strjoin(aux, buff);
             free(aux);
-            aux = change;
-            
+            aux = temp;
+
             if (ft_strchr(aux) == 1)
                 break;
         }
     }
-    if (len < 0)
+    /*if (len < 0)
         return (-1);
     else if (len == 0 && !aux)
     {
         *line = ft_strdup("");
         return (0);
-    }
-    while (aux[pos] != '\n' && aux[pos] != '\0')
-        pos++;
-    if (aux[pos] == '\n')
+    }*/
+    while (aux[len_aux] != '\n' && aux[len_aux] != '\0')
+        len_aux++;
+    if (aux[len_aux] == '\n')
     {
-        *line = ft_substr(aux,pos);
-        aux2 = ft_strdup(aux + (pos + 1));
+        *line = ft_substr(aux,len_aux);
+        temp = ft_strdup(aux + (len_aux + 1));
         free (aux);
-        aux = aux2;
-        if (*aux == '\0')
+        aux = temp;
+        /*if (*aux == '\0')
         {
             free(aux);
             aux = NULL;
-        }
+        }*/
         return (1);
     }
     *line = ft_strdup(aux);

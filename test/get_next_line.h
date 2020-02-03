@@ -7,7 +7,5 @@
 
 int	get_next_line(char **line);
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 512
-# endif
+
 #endif
